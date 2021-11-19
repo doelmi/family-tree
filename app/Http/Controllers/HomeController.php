@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Person;
+use App\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +25,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('layouts.bfr-app');
+        $contentTitle = 'Dasbor';
+        $countUsers = User::all()->count();
+        $countPeople = Person::all()->count();
+        return view('content.bfr-dashboard', compact('contentTitle', 'countUsers', 'countPeople'));
     }
 }

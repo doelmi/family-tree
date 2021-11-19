@@ -15,8 +15,8 @@ class CreatePartnersTable extends Migration
     {
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('people_man_id');
-            $table->unsignedInteger('people_woman_id');
+            $table->unsignedInteger('husband_id');
+            $table->unsignedInteger('wife_id');
             $table->date('marriage_date')->nullable();
             $table->string('marriage_status')->nullable();
             $table->timestamps();

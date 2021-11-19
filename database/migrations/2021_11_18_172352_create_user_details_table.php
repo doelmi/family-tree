@@ -16,7 +16,7 @@ class CreateUserDetailsTable extends Migration
         Schema::create('user_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('people_id');
+            $table->unsignedInteger('people_id')->nullable();
             $table->unsignedInteger('role_id');
             $table->string('status');
             $table->timestamps();

@@ -24,3 +24,14 @@ Auth::routes([
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/user', 'UserController@index')->name('user.index');
+Route::get('/user/create', 'UserController@create')->name('user.create');
+Route::post('/user/store', 'UserController@store')->name('user.store');
+Route::get('/user/edit/{id}', 'UserController@edit')->name('user.edit');
+Route::put('/user/update/{id}', 'UserController@update')->name('user.update');
+Route::put('/user/update-password/{id}', 'UserController@updatePassword')->name('user.update.password');
+
+Route::get('/person', 'PersonController@index')->name('person.index');
+Route::get('/person/search', 'PersonController@search')->name('person.search');
+Route::get('/person/show/{id}', 'PersonController@show')->name('person.show');

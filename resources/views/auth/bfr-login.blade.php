@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/apple-icon.png') }}">
     <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
     <title>
-        Sistem Informasi Silsilah Keluarga Bani Fathurrahman
+        Masuk - {{ env('APP_NAME') }}
     </title>
     <!--     Fonts and icons     -->
     <link rel="stylesheet" type="text/css"
@@ -46,7 +46,7 @@
                     class="navbar navbar-expand-lg blur border-radius-xl top-0 z-index-3 shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
                     <div class="container-fluid ps-2 pe-0 justify-content-center">
                         <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3" href="javascript:void(0)">
-                            Sistem Informasi Silsilah Keluarga Bani Fathurrahman
+                            {{ env('APP_NAME') }}
                         </a>
                     </div>
                 </nav>
@@ -69,17 +69,18 @@
                             </div>
                             <div class="card-body">
                                 @include('errors.bfr-notif')
-                                <form role="form" class="text-start">
+                                <form role="form" class="text-start" method="POST" action="{{ route('login') }}">
+                                    @csrf
                                     <div class="input-group input-group-outline my-3">
                                         <label class="form-label">Surel</label>
-                                        <input type="email" class="form-control">
+                                        <input type="email" class="form-control" name="email">
                                     </div>
                                     <div class="input-group input-group-outline mb-3">
                                         <label class="form-label">Kata Sandi</label>
-                                        <input type="password" class="form-control">
+                                        <input type="password" class="form-control" name="password">
                                     </div>
                                     <div class="text-center">
-                                        <button type="button"
+                                        <button type="submit"
                                             class="btn bg-gradient-primary w-100 my-4 mb-2">Masuk</button>
                                     </div>
                                     {{-- <p class="mt-4 text-sm text-center">
@@ -97,9 +98,7 @@
                     <div class="row align-items-center justify-content-lg-between">
                         <div class="col-12 col-md-6 my-auto">
                             <div class="copyright text-center text-sm text-white text-lg-start">
-                                <script>
-                                    document.write(new Date().getFullYear())
-                                </script>,
+                                {{ date('Y') }},
                                 dibuat dengan <i class="fa fa-heart" aria-hidden="true"></i> oleh
                                 <a href="https://doelmi.id" class="font-weight-bold text-white"
                                     target="_blank">Doelmi.ID</a>

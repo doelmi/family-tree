@@ -1,15 +1,16 @@
-<div class="alert alert-success alert-dismissible text-white" role="alert">
-    <span class="text-sm">A simple success alert with <a href="javascript:;" class="alert-link text-white">an
-            example link</a>. Give it a click if you like.</span>
-    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">×</span>
-    </button>
-</div>
-<div class="alert alert-danger alert-dismissible text-white" role="alert">
-    <span class="text-sm">A simple danger alert with <a href="javascript:;" class="alert-link text-white">an
-            example link</a>. Give it a click if you
-        like.</span>
-    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">×</span>
-    </button>
-</div>
+@if (session()->has('message'))
+    <div class="alert alert-success alert-dismissible text-white" role="alert">
+        <span class="text-sm">{{ session('message') }}</span>
+        <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+@endif
+@if (session()->has('error'))
+    <div class="alert alert-danger alert-dismissible text-white" role="alert">
+        <span class="text-sm">{{ session('error') }}</span>
+        <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+@endif

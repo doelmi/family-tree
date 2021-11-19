@@ -96,7 +96,7 @@ return [
     'password' => 'Isian kata sandi tidak tepat.',
     'present' => 'Isian :attribute harus ada.',
     'regex' => 'Isian format :attribute tidak valid.',
-    'required' => 'Isian :attribute wajid diisi.',
+    'required' => 'Isian :attribute wajib diisi.',
     'required_if' => 'Isian :attribute wajib diisi ketika :other adalah :value.',
     'required_unless' => 'Isian :attribute wajib diisi kecuali jika :other di dalam :values.',
     'required_with' => 'Isian :attribute wajib diisi ketika :values ada.',
