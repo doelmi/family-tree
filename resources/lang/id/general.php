@@ -24,7 +24,7 @@ return [
     'tk' => 'Taman Kanak-kanak',
     'sd' => 'Sekolah Dasar / Madrasah Ibtidaiyah / Sederajat',
     'smp' => 'Sekolah Menengah Pertama / Madrasah Tsanawiyah / Sederajat',
-    'sma' => 'Sekolah Menengah Atas / Madrasah Aliyah / Sederajat',
+    'sma' => 'Sekolah Menengah Atas / Madrasah Aliyah / SMK / MAK / Sederajat',
     'd3' => 'Diploma 3',
     'd4-s1' => 'Diploma 4 / Sarjana (S1)',
     's2' => 'Magister (S2)',

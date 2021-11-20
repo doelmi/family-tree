@@ -34,6 +34,8 @@ class CreatePeopleTable extends Migration
             $table->string('marital_status')->nullable();
             $table->unsignedInteger('father_id')->nullable();
             $table->unsignedInteger('mother_id')->nullable();
+            $table->tinyInteger('child_number', false, true)->nullable();
+            $table->date('dead_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

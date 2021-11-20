@@ -146,6 +146,31 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'Nama',
+        'email' => 'Surel',
+        'nickname' => 'Nama Panggilan',
+        'photo' => 'Foto',
+        'education' => 'Pendidikan Terakhir',
+        'phone' => 'Ho HP',
+        'address' => 'Alamat',
+        'province' => 'Provinsi',
+        'city' => 'Kota / Kabupaten',
+        'district' => 'Kecamatan',
+        'village' => 'Desa / Kelurahan',
+        'gender' => 'Jenis Kelamin',
+        'identification_number' => 'NIK / No KTP',
+        'birth_place' => 'Tempat Lahir',
+        'birth_date' => 'Tanggal Lahir',
+        'life_status' => 'Status Hidup',
+        'marital_status' => 'Status Pernikahan',
+        'father_id' => 'Ayah',
+        'mother_id' => 'Ibu',
+        'dead_date' => 'Tanggal Kematian',
+        'child_number' => 'Anak ke',
+        'husband_id' => 'Suami',
+        'wife_id' => 'Istri',
+        'marriage_date' => 'Tanggal Pernikahan',
+    ],
 
 ];

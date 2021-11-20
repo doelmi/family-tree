@@ -23,15 +23,42 @@ Auth::routes([
     'verify' => false, // Email Verification Routes...
 ]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::prefix('home')->name('home.')->middleware('auth', 'access.right:superadmin,admin,family_head')->group(function () {
+    Route::get('/', function () {
+        return redirect(route('home.dashboard'));
+    })->name('index');
+    Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
+});
 
-Route::get('/user', 'UserController@index')->name('user.index');
-Route::get('/user/create', 'UserController@create')->name('user.create');
-Route::post('/user/store', 'UserController@store')->name('user.store');
-Route::get('/user/edit/{id}', 'UserController@edit')->name('user.edit');
-Route::put('/user/update/{id}', 'UserController@update')->name('user.update');
-Route::put('/user/update-password/{id}', 'UserController@updatePassword')->name('user.update.password');
+Route::prefix('user')->name('user.')->middleware('auth', 'access.right:superadmin')->group(function () {
+    Route::get('/', 'UserController@index')->name('index');
+    Route::get('/create', 'UserController@create')->name('create');
+    Route::post('/store', 'UserController@store')->name('store');
+    Route::get('/edit/{id}', 'UserController@edit')->name('edit');
+    Route::put('/update/{id}', 'UserController@update')->name('update');
+    Route::put('/update-password/{id}', 'UserController@updatePassword')->name('update.password');
+});
 
-Route::get('/person', 'PersonController@index')->name('person.index');
-Route::get('/person/search', 'PersonController@search')->name('person.search');
-Route::get('/person/show/{id}', 'PersonController@show')->name('person.show');
+Route::prefix('person')->name('person.')->middleware('auth', 'access.right:superadmin,admin,family_head')->group(function () {
+    Route::get('/', 'PersonController@index')->name('index');
+    Route::get('/search', 'PersonController@search')->name('search');
+    Route::get('/show/{id}', 'PersonController@show')->name('show');
+    Route::get('/create', 'PersonController@create')->name('create');
+    Route::post('/store', 'PersonController@store')->name('store');
+    Route::get('/edit/{id}', 'PersonController@edit')->name('edit');
+    Route::put('/update/{id}', 'PersonController@update')->name('update');
+});
+
+Route::prefix('partner')->name('partner.')->middleware('auth', 'access.right:superadmin,admin,family_head')->group(function () {
+    Route::get('/create', 'PartnerController@create')->name('create');
+    Route::post('/store', 'PartnerController@store')->name('store');
+    Route::get('/edit/{id}', 'PartnerController@edit')->name('edit');
+    Route::put('/update/{id}', 'PartnerController@update')->name('update');
+});
+
+Route::prefix('zone')->name('zone.')->middleware('auth', 'access.right:superadmin,admin,family_head')->group(function () {
+    Route::get('/provinces', 'ZoneController@provinces')->name('province');
+    Route::get('/cities', 'ZoneController@cities')->name('city');
+    Route::get('/districts', 'ZoneController@districts')->name('district');
+    Route::get('/villages', 'ZoneController@villages')->name('village');
+});

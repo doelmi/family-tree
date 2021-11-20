@@ -64,7 +64,7 @@
         <div class="collapse navbar-collapse  w-auto  max-height-vh-100" id="sidenav-collapse-main">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link text-white @if (Route::is('home*')) active bg-gradient-primary @endif" href="{{ route('home') }}">
+                    <a class="nav-link text-white @if (Route::is('home*')) active bg-gradient-primary @endif" href="{{ route('home.dashboard') }}">
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="material-icons opacity-10">dashboard</i>
                         </div>
@@ -72,7 +72,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white @if (Route::is('user*')) active bg-gradient-primary @endif" href="{{ route('user.index') }}">
+                    <a class="nav-link text-white @if (Route::is('user*') && !Route::is('user.create')) active bg-gradient-primary @endif" href="{{ route('user.index') }}">
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="material-icons opacity-10">person</i>
                         </div>
@@ -80,11 +80,27 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white @if (Route::is('person*')) active bg-gradient-primary @endif" href="{{ route('person.index') }}">
+                    <a class="nav-link text-white @if (Route::is('user.create')) active bg-gradient-primary @endif" href="{{ route('user.create') }}">
+                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="material-icons opacity-10">person_add</i>
+                        </div>
+                        <span class="nav-link-text ms-1">Tambah Pengguna</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white @if (Route::is('person*') && !Route::is('person.create')) active bg-gradient-primary @endif" href="{{ route('person.index') }}">
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="material-icons opacity-10">people</i>
                         </div>
                         <span class="nav-link-text ms-1">Orang</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white @if (Route::is('person.create')) active bg-gradient-primary @endif" href="{{ route('person.create') }}">
+                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="material-icons opacity-10">group_add</i>
+                        </div>
+                        <span class="nav-link-text ms-1">Tambah Orang</span>
                     </a>
                 </li>
                 <li class="nav-item mt-3">
