@@ -18,7 +18,7 @@ return [
 
     //status hidup
     'alive' => 'Hidup',
-    'dead' => 'Mati',
+    'dead' => 'Wafat',
 
     //pendidikan
     'tk' => 'Taman Kanak-kanak',

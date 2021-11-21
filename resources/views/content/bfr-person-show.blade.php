@@ -9,7 +9,8 @@
                         <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
                             <div class="row">
                                 <div class="col-6 d-flex align-items-center">
-                                    <h6 class="text-white text-capitalize ps-3">Detail Orang</h6>
+                                    <h6 class="text-white text-capitalize ps-3">Detail Orang &middot; {{ $person->name }}
+                                    </h6>
                                 </div>
                                 <div class="col-6 text-end">
                                     <a href="{{ route('person.index') }}"
@@ -26,7 +27,7 @@
                                         class="img-fluid border-radius-lg mx-auto" alt="user1">
                                 </div>
                                 <div class="d-grid gap-2 mb-3">
-                                    <a href="{{ route('person.edit', ['id' => $person->id]) }}"
+                                    <a href="{{ route('person.family.tree', ['id' => $person->id]) }}"
                                         class="btn btn-secondary btn-block mb-1 me-3">Lihat Diagram Silsilah</a>
                                     <a href="{{ route('person.edit', ['id' => $person->id]) }}"
                                         class="btn btn-info btn-block mb-1 me-3">Edit</a>
@@ -110,7 +111,7 @@
                                                     <span
                                                         class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 text-nowrap">Tanggal
                                                         Kematian</span>
-                                                    <span>{{ $person->dead_date->ISOformat('LL') }}</span>
+                                                    <span>{{ $person->dead_date ? $person->dead_date->ISOformat('LL') : '-' }}</span>
                                                 </li>
                                             @endif
                                         </ul>

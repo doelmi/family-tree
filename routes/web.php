@@ -47,6 +47,9 @@ Route::prefix('person')->name('person.')->middleware('auth', 'access.right:super
     Route::post('/store', 'PersonController@store')->name('store');
     Route::get('/edit/{id}', 'PersonController@edit')->name('edit');
     Route::put('/update/{id}', 'PersonController@update')->name('update');
+    Route::post('/search-list', 'PersonController@searchList')->name('search.list');
+    Route::get('/family-tree/{id}', 'PersonController@familyTree')->name('family.tree');
+    Route::get('/family-tree-json/{id}', 'PersonController@familyTreeJson')->name('family.tree.json');
 });
 
 Route::prefix('partner')->name('partner.')->middleware('auth', 'access.right:superadmin,admin,family_head')->group(function () {

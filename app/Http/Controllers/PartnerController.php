@@ -15,8 +15,8 @@ class PartnerController extends Controller
     public function create(Request $request)
     {
         $contentTitle = 'Relasi Pasangan';
-        $husband_id = $request->input('husband_id') ?? (old('husband_id') ?? null);
-        $wife_id = $request->input('wife_id') ?? (old('wife_id') ?? null);
+        $husband_id =  old('husband_id') ?? ($request->input('husband_id') ?? null);
+        $wife_id = old('wife_id') ?? ($request->input('wife_id') ?? null);
         $husband = $husband_id ? $husband = Person::find($husband_id) : null;
         $wife = $wife_id ? $wife = Person::find($wife_id) : null;
         return view('content.bfr-partner-create', compact('contentTitle', 'husband', 'wife'));
@@ -28,7 +28,7 @@ class PartnerController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'marriage_date' => 'date|nullable',
-                'husband_id' => ['required', Rule::in(PersonHelper::allowedHusband())],
+                'wife_id' => ['required', Rule::in(PersonHelper::allowedWife())],
             ]);
 
             if ($validator->fails()) {

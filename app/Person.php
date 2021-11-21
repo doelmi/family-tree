@@ -43,23 +43,33 @@ class Person extends Model
         return $this->hasOne('App\Person', 'id', 'mother_id');
     }
 
-    public function daughters()
+    public function daughters($parent_key)
     {
-        return $this->hasMany('App\Person', 'mother_id', 'id')->where('gender', 'woman');
+        return $this->hasMany('App\Person', $parent_key, 'id')->where('gender', 'woman');
     }
 
-    public function sons()
+    public function sons($parent_key)
     {
-        return $this->hasMany('App\Person', 'mother_id', 'id')->where('gender', 'man');
+        return $this->hasMany('App\Person', $parent_key, 'id')->where('gender', 'man');
     }
 
-    public function children()
+    public function children($parent_key)
     {
-        return $this->hasMany('App\Person', 'mother_id', 'id');
+        return $this->hasMany('App\Person', $parent_key, 'id');
     }
 
     protected $casts = [
         'birth_date' => 'date',
         'dead_date' => 'date',
     ];
+
+    protected $appends = ['substr'];
+
+    public function getSubstrAttribute()
+    {
+        $value = $this->name;
+        $strlen = strlen($value);
+        $string = $strlen > 25 ? substr($value, 0, 25) . "..." : $value;
+        return strtoupper($string);
+    }
 }

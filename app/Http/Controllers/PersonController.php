@@ -23,9 +23,13 @@ class PersonController extends Controller
 
     public function index()
     {
+        $search = session()->has('search') ? session('search') : '';
         $contentTitle = 'Orang';
-        $people = Person::paginate(20);
-        return view('content.bfr-person-list', compact('contentTitle', 'people'));
+        $people = Person::when($search != '', function ($query) use ($search) {
+            $query->where('name', 'LIKE', "%$search%");
+            $query->orWhere('nickname', 'LIKE', "%$search%");
+        })->latest()->paginate(20);
+        return view('content.bfr-person-list', compact('contentTitle', 'people', 'search'));
     }
 
     public function show($id)
@@ -48,15 +52,7 @@ class PersonController extends Controller
 
         $children = Person::where('father_id', $person->id)->orWhere('mother_id', $person->id)->orderBy('child_number')->get();
 
-        $spouse = (object) [
-            'name' => $person->gender == 'man' ? 'Istri' : 'Suami',
-            'code' => $person->gender == 'man' ? 'wife' : 'husband',
-            'key' => $person->gender == 'man' ? 'wife_id' : 'husband_id',
-            'parent' => $person->gender == 'man' ? 'mother' : 'father',
-            'parent_key' => $person->gender == 'man' ? 'mother_id' : 'father_id',
-            'me' => $person->gender == 'man' ? 'Suami' : 'Istri',
-            'me_key' => $person->gender == 'man' ? 'husband_id' : 'wife_id',
-        ];
+        $spouse = PersonHelper::spouse($person->gender);
 
         $partners = Partner::where($spouse->me_key, $person->id)->get();
 
@@ -70,6 +66,128 @@ class PersonController extends Controller
         $maritalStatus = PersonHelper::listMaritalStatus();
         $person = Person::find($id);
         return view('content.bfr-person-edit', compact('contentTitle', 'educations', 'maritalStatus', 'person'));
+    }
+
+    public function familyTree($id)
+    {
+        $contentTitle = 'Orang';
+        $person = Person::find($id);
+        $spouse = PersonHelper::spouse($person->gender);
+        return view('content.bfr-person-family-tree', compact('contentTitle', 'person', 'spouse'));
+    }
+
+    public function familyTreeJson($id)
+    {
+        $person = Person::find($id);
+        if ($person->father_id) {
+            $father = [
+                'name' => $person->father->substr,
+                'class' => $person->father->gender,
+                'extra' => [
+                    'id' => $person->father->id,
+                    'tree_link' => route('person.family.tree', ['id' => $person->father->id])
+                ],
+                'marriages' => [
+                    [
+                        'spouse' => null,
+                        'children' => null
+                    ]
+                ],
+            ];
+        } else {
+            $father = [
+                'name' => '...',
+                'class' => 'man',
+                'marriages' => [
+                    [
+                        'spouse' => null,
+                        'children' => null
+                    ]
+                ],
+            ];
+        }
+        if ($person->mother_id) {
+            $father['marriages'][0]['spouse'] = [
+                'name' => $person->mother->substr,
+                'class' => $person->mother->gender,
+                'extra' => [
+                    'id' => $person->mother->id,
+                    'tree_link' => route('person.family.tree', ['id' => $person->mother->id])
+                ],
+            ];
+        } else {
+            $father['marriages'][0]['spouse'] = [
+                'name' => '...',
+                'class' => 'woman',
+            ];
+        }
+        if ($person->father_id && $person->mother_id) {
+            $broSis = Person::where('father_id', $person->father_id)->where('mother_id', $person->mother_id)->orderBy('child_number')->get();
+        } else {
+            $broSis = [];
+        }
+        $broSisArray = [];
+
+        $spouse = PersonHelper::spouse($person->gender);
+
+        // Get data anak
+        $marriagesPerson = Partner::where($spouse->me_key, $person->id)->get();
+
+        $marriagesPersonArray = [];
+        foreach ($marriagesPerson as $mp) {
+            $marriagesPersonArray[$mp->{$spouse->key}]['spouse'] = [
+                'name' => $mp->{$spouse->code}->substr,
+                'class' => $mp->{$spouse->code}->gender,
+                'extra' => [
+                    'id' => $mp->{$spouse->code}->id,
+                    'tree_link' => route('person.family.tree', ['id' => $mp->{$spouse->code}->id])
+                ]
+            ];
+        }
+
+        $children = Person::where($spouse->child_key, $person->id)->orderBy('child_number')->get();
+
+        foreach ($children as $child) {
+            $marriagesPersonArray[$child->{$spouse->parent_key}]['children'][] = [
+                'name' => $child->substr,
+                'class' => $child->gender,
+                'extra' => [
+                    'id' => $child->id,
+                    'tree_link' => route('person.family.tree', ['id' => $child->id])
+                ],
+            ];
+        }
+        $marriagesPersonArray = array_values($marriagesPersonArray);
+
+        foreach ($broSis as $br) {
+
+            $broSisArray[] = [
+                'name' => $br->substr,
+                'class' => $br->gender,
+                'textClass' => $br->id == $person->id ? 'font-weight-bolder' : '',
+                'marriages' => $br->id == $person->id ? $marriagesPersonArray : null,
+                'extra' => [
+                    'id' => $br->id,
+                    'tree_link' => route('person.family.tree', ['id' => $br->id])
+                ],
+            ];
+        }
+        if (empty($broSis)) {
+            $broSisArray[] = [
+                'name' => $person->substr,
+                'class' => $person->gender,
+                'textClass' => 'font-weight-bolder',
+                'marriages' => $marriagesPersonArray,
+                'extra' => [
+                    'id' => $person->id,
+                    'tree_link' => route('person.family.tree', ['id' => $person->id])
+                ],
+            ];
+        }
+
+        $father['marriages'][0]['children'] = $broSisArray;
+        $json = [$father];
+        return response()->json($json);
     }
 
     public function create()
@@ -205,6 +323,12 @@ class PersonController extends Controller
         }
     }
 
+    public function searchList(Request $request)
+    {
+        session()->put('search', $request->search);
+        return redirect()->route('person.index');
+    }
+
     public function search(Request $request)
     {
         $term = $request->input('term', '');
@@ -215,7 +339,7 @@ class PersonController extends Controller
             ->when($request->input('gender'), function ($query) use ($request) {
                 $query->where('gender', '=', $request->input('gender'));
             })
-            ->get(['id', 'name as text']);
+            ->get(['id', DB::raw("concat(name, ' - ', IF(life_status = 'alive', '" . __('general.alive') . "', '" . __('general.dead') . "') ) as text")]);
         return response()->json(['results' => $people]);
     }
 }

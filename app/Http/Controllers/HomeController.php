@@ -28,6 +28,8 @@ class HomeController extends Controller
         $contentTitle = 'Dasbor';
         $countUsers = User::all()->count();
         $countPeople = Person::all()->count();
-        return view('content.bfr-dashboard', compact('contentTitle', 'countUsers', 'countPeople'));
+        $countMen = Person::where('gender', 'man')->count();
+        $countWomen = Person::where('gender', 'woman')->count();
+        return view('content.bfr-dashboard', compact('contentTitle', 'countUsers', 'countPeople', 'countMen', 'countWomen'));
     }
 }

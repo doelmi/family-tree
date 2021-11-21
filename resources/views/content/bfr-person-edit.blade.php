@@ -73,7 +73,7 @@
                             <div class="input-group input-group-static mb-3">
                                 <label class="ms-0">Tanggal Lahir</label>
                                 <input type="date" name="birth_date" class="form-control" autocomplete="off"
-                                    autofill="off" value="{{ $person->birth_date->format('Y-m-d') }}">
+                                    autofill="off" value="{{ $person->birth_date ? $person->birth_date->format('Y-m-d') : '' }}">
                             </div>
                             <div class="input-group input-group-static mb-3">
                                 <label class="m-0">Pendidikan Terakhir</label>
@@ -113,7 +113,7 @@
                             <div class="input-group input-group-static mb-3" id="deadDateDiv">
                                 <label class="ms-0">Tanggal Kematian</label>
                                 <input type="date" name="dead_date" class="form-control" autocomplete="off" autofill="off"
-                                    value="{{ $person->dead_date }}">
+                                    value="{{ $person->dead_date ? $person->dead_date->format('Y-m-d') : '' }}">
                             </div>
 
                             <div class=" mt-3 mb-2">
@@ -166,7 +166,7 @@
                             </div>
                             <div class="text-center">
                                 <button type="submit"
-                                    class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Buat</button>
+                                    class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Simpan</button>
                             </div>
                         </form>
                     </div>
