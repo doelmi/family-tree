@@ -4,16 +4,16 @@
     <style type="text/css">
         .linage {
             fill: none;
-            stroke: #000;
+            stroke: #00a500;
         }
 
         .marriage {
             fill: none;
-            stroke: black;
+            stroke: rgb(255, 0, 0);
         }
 
         .marriageNode {
-            background-color: black;
+            background-color: rgb(255, 0, 0);
             border-radius: 50%;
         }
 

@@ -31,8 +31,10 @@
                                         class="btn btn-secondary btn-block mb-1 me-3">Lihat Diagram Silsilah</a>
                                     <a href="{{ route('person.edit', ['id' => $person->id]) }}"
                                         class="btn btn-info btn-block mb-1 me-3">Edit</a>
-                                    <a href="{{ route('person.edit', ['id' => $person->id]) }}"
-                                        class="btn btn-danger btn-block mb-1 me-3">Hapus</a>
+                                    @if (in_array(Auth::user()->detail->role->code, ['superadmin']))
+                                        <a href="javascript:void(0)" class="btn btn-danger btn-block mb-1 me-3"
+                                            data-bs-toggle="modal" data-bs-target="#deletePersonModal">Hapus</a>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-xs-12 col-md-9">
@@ -226,7 +228,15 @@
                         <div class="row">
                             @forelse ($partners as $partner)
                                 <div class="col-xs-12 col-md-6 col-lg-4">
-                                    <div class="card mb-3">
+                                    <div class="card mb-3 position-relative">
+                                        <a class="position-absolute top-0 end-0 p-3"
+                                            href="{{ route('partner.edit', ['id' => $partner->id]) }}">
+                                            <div class="text-center d-flex align-items-center justify-content-center"
+                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Edit Relasi ke {{ $spouse->name . ' ' . $partner->{$spouse->code}->name }}">
+                                                <i class="material-icons opacity-10">edit</i>
+                                            </div>
+                                        </a>
                                         <div class="d-flex">
                                             <div class="py-3 ps-3">
                                                 <img src="{{ asset('assets/img/no-avatar.png') }}"
@@ -244,7 +254,8 @@
                                                             {{ $partner->{$spouse->code}->birth_date ? $partner->{$spouse->code}->birth_date->age : '-' }}
                                                             tahun</span>
                                                         <br>
-                                                        <span>{{ $spouse->name }}</span>
+                                                        <span>{{ $spouse->name }} &middot;
+                                                            {{ $partner->marriage_date ? $partner->marriage_date->ISOformat('LL') : '' }}</span>
                                                     </p>
                                                 </div>
                                             </div>
@@ -299,4 +310,34 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Modal -->
+    @if (in_array(Auth::user()->detail->role->code, ['superadmin']))
+        <div class="modal fade" id="deletePersonModal" tabindex="-1" role="dialog"
+            aria-labelledby="deletePersonModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <form action="{{ route('person.destroy') }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <input type="hidden" name="delete_person_id" value="{{ $person->id }}">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title font-weight-normal" id="deletePersonModalLabel">Hapus data orang</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Apakah Anda yakin untuk menghapus data orang ini: {{ $person->name }} ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn bg-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn bg-gradient-danger">Hapus</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
 @endsection

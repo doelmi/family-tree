@@ -49,14 +49,21 @@ class LoginController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
+        if (!Auth::attempt($credentials)) {
             // Authentication passed...
-            return redirect()->intended('home')->with([
-                'message' => __('auth.success')
+            return redirect()->back()->with([
+                'error' => __('auth.failed')
             ]);
         }
-        return redirect()->back()->with([
-            'error' => __('auth.failed')
+        if (Auth::user()->detail->status != 'active') {
+            Auth::logout();
+            return redirect()->back()->with([
+                'error' => __('auth.failed.nonactive')
+            ]);
+        }
+
+        return redirect()->intended('home')->with([
+            'message' => __('auth.success')
         ]);
     }
 }

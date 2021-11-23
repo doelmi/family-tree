@@ -67,7 +67,7 @@ class Person extends Model
 
     public function getSubstrAttribute()
     {
-        $value = $this->name;
+        $value = utf8_encode($this->name);
         $strlen = strlen($value);
         $string = $strlen > 25 ? substr($value, 0, 25) . "..." : $value;
         return strtoupper($string);

@@ -50,4 +50,40 @@ class PartnerController extends Controller
             return back()->with(['error' => $th->getMessage()])->withInput();
         }
     }
+
+    public function edit($id)
+    {
+        $contentTitle = 'Relasi Pasangan';
+        $partner = Partner::find($id);
+        $husband = $partner->husband;
+        $wife = $partner->wife;
+        return view('content.bfr-partner-edit', compact('contentTitle', 'husband', 'wife', 'partner'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $validator = Validator::make($request->all(), [
+                'marriage_date' => 'date|nullable',
+                'wife_id' => ['required', Rule::in(PersonHelper::allowedWife((int) $request->wife_id))],
+            ]);
+
+            if ($validator->fails()) {
+                throw new \Exception(implode(" ", $validator->messages()->all()));
+            }
+
+            $partner = Partner::find($id);
+            $partner->marriage_date = $request->marriage_date;
+            $partner->husband_id = $request->husband_id;
+            $partner->wife_id = $request->wife_id;
+            $partner->save();
+
+            DB::commit();
+            return ($request->referrer ? redirect($request->referrer) : redirect()->route('person.show', ['id' => $request->husband_id]))->with('message', 'Relasi Pasangan berhasil diperbarui');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return back()->with(['error' => $th->getMessage()])->withInput();
+        }
+    }
 }

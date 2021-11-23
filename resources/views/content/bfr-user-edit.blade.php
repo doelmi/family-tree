@@ -39,7 +39,7 @@
                                         peran</option>
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->id }}"
-                                            {{ $user->detail->role_id ? 'selected' : '' }}>{{ $role->name }}
+                                            {{ $user->detail->role_id == $role->id? 'selected' : '' }}>{{ $role->name }}
                                         </option>
                                     @endforeach
                                 </select>

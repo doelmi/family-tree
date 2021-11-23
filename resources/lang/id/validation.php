@@ -30,7 +30,7 @@ return [
         'array' => 'Isian :attribute harus memiliki barang diantara :min dan :max.',
     ],
     'boolean' => 'Isian :attribute harus bernilai benar atau salah.',
-    'confirmed' => 'Isian konfirmasi :attribute tidak cocok.',
+    'confirmed' => 'Isian Konfirmasi :attribute tidak cocok.',
     'date' => 'Isian :attribute bukan tanggal yang valid.',
     'date_equals' => 'Isian :attribute harus tanggal yang sama dengan :date.',
     'date_format' => 'Isian :attribute tidak sama dengan format :format.',
@@ -118,6 +118,8 @@ return [
     'url' => 'Isian format :attribute tidak valid.',
     'uuid' => 'Isian :attribute harus berupa UUID yang valid.',
 
+    'delete_forbidden' => ':attribute masih berelasi dengan orang lain (Ayah/Ibu atau Suami/Istri), tidak dapat dihapus.',
+    'match_old_password' => 'Isian :attribute tidak cocok dengan data kami.',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -171,6 +173,11 @@ return [
         'husband_id' => 'Suami',
         'wife_id' => 'Istri',
         'marriage_date' => 'Tanggal Pernikahan',
+        'delete_person_id' => 'Data Orang akan dihapus',
+        'password' => 'Kata Sandi',
+        'current_password' => 'Kata Sandi Sekarang',
+        'new_password' => 'Kata Sandi Baru',
+        'new_password_confirmation' => 'Konfirmasi Kata Sandi Baru',
     ],
 
 ];

@@ -70,22 +70,24 @@
                         <span class="nav-link-text ms-1">Dasbor</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white @if (Route::is('user*') && !Route::is('user.create')) active bg-gradient-primary @endif" href="{{ route('user.index') }}">
-                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="material-icons opacity-10">person</i>
-                        </div>
-                        <span class="nav-link-text ms-1">Pengguna</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white @if (Route::is('user.create')) active bg-gradient-primary @endif" href="{{ route('user.create') }}">
-                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="material-icons opacity-10">person_add</i>
-                        </div>
-                        <span class="nav-link-text ms-1">Tambah Pengguna</span>
-                    </a>
-                </li>
+                @if (in_array(Auth::user()->detail->role->code, ['superadmin']))
+                    <li class="nav-item">
+                        <a class="nav-link text-white @if (Route::is('user*') && !Route::is('user.create')) active bg-gradient-primary @endif" href="{{ route('user.index') }}">
+                            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <i class="material-icons opacity-10">person</i>
+                            </div>
+                            <span class="nav-link-text ms-1">Pengguna</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white @if (Route::is('user.create')) active bg-gradient-primary @endif" href="{{ route('user.create') }}">
+                            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <i class="material-icons opacity-10">person_add</i>
+                            </div>
+                            <span class="nav-link-text ms-1">Tambah Pengguna</span>
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-item">
                     <a class="nav-link text-white @if (Route::is('person*') && !Route::is('person.create')) active bg-gradient-primary @endif" href="{{ route('person.index') }}">
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -94,20 +96,22 @@
                         <span class="nav-link-text ms-1">Orang</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white @if (Route::is('person.create')) active bg-gradient-primary @endif" href="{{ route('person.create') }}">
-                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="material-icons opacity-10">group_add</i>
-                        </div>
-                        <span class="nav-link-text ms-1">Tambah Orang</span>
-                    </a>
-                </li>
+                @if (in_array(Auth::user()->detail->role->code, ['superadmin', 'admin']))
+                    <li class="nav-item">
+                        <a class="nav-link text-white @if (Route::is('person.create')) active bg-gradient-primary @endif" href="{{ route('person.create') }}">
+                            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <i class="material-icons opacity-10">group_add</i>
+                            </div>
+                            <span class="nav-link-text ms-1">Tambah Orang</span>
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-item mt-3">
                     <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Halaman Akun
                     </h6>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white @if (Route::is('account*')) active bg-gradient-primary @endif" href="../pages/profile.html">
+                    <a class="nav-link text-white @if (Route::is('account*')) active bg-gradient-primary @endif" href="{{ route('account.profile') }}">
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="material-icons opacity-10">manage_accounts</i>
                         </div>

@@ -16,5 +16,6 @@ return [
     'failed'   => 'Identitas tersebut tidak cocok dengan data kami.',
     'throttle' => 'Terlalu banyak usaha masuk. Silahkan coba lagi dalam :seconds detik.',
     'success' => 'Anda telah berhasil masuk.',
+    'failed.nonactive'   => 'Akun Anda ditemukan, namun tidak Aktif. Hubungi Admin untuk info lebih lanjut.',
 
 ];

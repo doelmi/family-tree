@@ -71,7 +71,7 @@ class PersonHelper
     //     ->pluck('id')->toArray();
     // }
 
-    public static function allowedWife()
+    public static function allowedWife(...$exceptId)
     {
         $request = request();
         $person = Person::find($request->husband_id);
@@ -99,7 +99,7 @@ class PersonHelper
         })->pluck('id')->toArray();
 
         // Wanita yang boleh dinikahi
-        return Person::where('gender', 'woman')->where(function ($query) use ($request) {
+        $allWomen = Person::where('gender', 'woman')->where(function ($query) use ($request) {
             $query->where('father_id', '!=', $request->husband_id);
             $query->orWhere('father_id', null);
         })->where(function ($query) use ($person) {
@@ -108,5 +108,11 @@ class PersonHelper
         })->where('id', '!=', $person->mother_id)
         ->whereNotIn('id', array_merge($partnersId, $grandmothers, $aunts, $nieces) )
         ->pluck('id')->toArray();
+
+        if(!empty($exceptId)) {
+            $allWomen = array_merge($allWomen, $exceptId);
+        }
+
+        return $allWomen;
     }
 }

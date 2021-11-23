@@ -7,6 +7,7 @@ use App\User;
 use App\UserDetail;
 use App\UserRole;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -76,6 +77,11 @@ class UserController extends Controller
 
     public function edit($id)
     {
+        if($id == Auth::user()->id) {
+            return redirect()->back()->with([
+                'error' => 'Anda tidak dapat memperbarui data diri sendiri melalui menu ini.'
+            ]);
+        }
         $contentTitle = 'Pengguna';
         $user = User::find($id);
         $roles = UserRole::all();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\PersonHelper;
 use App\Partner;
 use App\Person;
+use App\Rules\PersonDeleteRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -35,7 +36,7 @@ class PersonController extends Controller
     public function show($id)
     {
         $contentTitle = 'Orang';
-        $person = Person::find($id);
+        $person = Person::findOrFail($id);
         $siblings1 = $person->father_id ? Person::where('father_id', $person->father_id)->where('id', '!=', $person->id)->orderBy('child_number')->get()->toArray() : [];
         $siblings2 = $person->mother_id ? Person::where('mother_id', $person->mother_id)->where('id', '!=', $person->id)->orderBy('child_number')->get()->toArray() : [];
         $allSiblings = array_merge($siblings1, $siblings2);
@@ -95,16 +96,7 @@ class PersonController extends Controller
                 ],
             ];
         } else {
-            $father = [
-                'name' => '...',
-                'class' => 'man',
-                'marriages' => [
-                    [
-                        'spouse' => null,
-                        'children' => null
-                    ]
-                ],
-            ];
+            $father = [];
         }
         if ($person->mother_id) {
             $father['marriages'][0]['spouse'] = [
@@ -116,10 +108,10 @@ class PersonController extends Controller
                 ],
             ];
         } else {
-            $father['marriages'][0]['spouse'] = [
-                'name' => '...',
-                'class' => 'woman',
-            ];
+            // $father['marriages'][0]['spouse'] = [
+            //     'name' => '...',
+            //     'class' => 'woman',
+            // ];
         }
         if ($person->father_id && $person->mother_id) {
             $broSis = Person::where('father_id', $person->father_id)->where('mother_id', $person->mother_id)->orderBy('child_number')->get();
@@ -138,6 +130,7 @@ class PersonController extends Controller
             $marriagesPersonArray[$mp->{$spouse->key}]['spouse'] = [
                 'name' => $mp->{$spouse->code}->substr,
                 'class' => $mp->{$spouse->code}->gender,
+                'depthOffset' => 1,
                 'extra' => [
                     'id' => $mp->{$spouse->code}->id,
                     'tree_link' => route('person.family.tree', ['id' => $mp->{$spouse->code}->id])
@@ -168,7 +161,7 @@ class PersonController extends Controller
                 'marriages' => $br->id == $person->id ? $marriagesPersonArray : null,
                 'extra' => [
                     'id' => $br->id,
-                    'tree_link' => route('person.family.tree', ['id' => $br->id])
+                    'tree_link' => $br->id == $person->id ? null : route('person.family.tree', ['id' => $br->id])
                 ],
             ];
         }
@@ -180,12 +173,15 @@ class PersonController extends Controller
                 'marriages' => $marriagesPersonArray,
                 'extra' => [
                     'id' => $person->id,
-                    'tree_link' => route('person.family.tree', ['id' => $person->id])
+                    'tree_link' => null
                 ],
             ];
         }
-
-        $father['marriages'][0]['children'] = $broSisArray;
+        if (empty($father)) {
+            $father = $broSisArray[0];
+        } else {
+            $father['marriages'][0]['children'] = $broSisArray;
+        }
         $json = [$father];
         return response()->json($json);
     }
@@ -341,5 +337,27 @@ class PersonController extends Controller
             })
             ->get(['id', DB::raw("concat(name, ' - ', IF(life_status = 'alive', '" . __('general.alive') . "', '" . __('general.dead') . "') ) as text")]);
         return response()->json(['results' => $people]);
+    }
+
+    public function destroy(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $validator = Validator::make($request->all(), [
+                'delete_person_id' => ['required', new PersonDeleteRule],
+            ]);
+
+            if ($validator->fails()) {
+                throw new \Exception(implode(" ", $validator->messages()->all()));
+            }
+
+            Person::destroy($request->delete_person_id);
+
+            DB::commit();
+            return redirect()->route('person.index')->with('message', 'Data Orang berhasil dihapus');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return back()->with(['error' => $th->getMessage()])->withInput();
+        }
     }
 }

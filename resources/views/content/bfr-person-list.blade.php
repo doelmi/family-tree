@@ -8,33 +8,42 @@
                     <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                         <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
                             <div class="row">
-                                <div class="col-6 d-flex align-items-center">
+                                <div class="col d-flex align-items-center">
                                     <h6 class="text-white text-capitalize ps-3">Daftar Orang</h6>
                                 </div>
-                                <div class="col-6 text-end">
-                                    <a href="{{ route('person.create') }}"
-                                        class="btn btn-outline-white btn-sm mb-1 me-3">Tambah Orang</a>
-                                </div>
+                                @if (in_array(Auth::user()->detail->role->code, ['superadmin', 'admin']))
+                                    <div class="col text-end">
+                                        <a href="{{ route('person.create') }}"
+                                            class="btn btn-outline-white btn-sm mb-1 me-3">Tambah Orang</a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
                     <div class="card-body px-0 pb-2">
-                        <div class="d-flex justify-content-end px-4">
-                            <form role="form" class="text-start w-25" method="POST"
-                                action="{{ route('person.search.list') }}">
-                                @csrf
-                                <div class="input-group input-group-outline mb-3">
-                                    <input type="text" class="form-control" placeholder="Cari orang berdasarkan nama ..."
-                                        value="{{ @$search }}" name="search">
-                                    <button class="btn btn-outline-primary m-0" type="submit" id="button-addon2">
-                                        <div class="text-center me-2 d-flex align-items-center justify-content-center">
-                                            <i class="material-icons opacity-10">search</i>
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-5 col-xl-3">
+                                <div class="d-flex justify-content-end px-4">
+                                    <form role="form" class="text-start w-100" method="POST"
+                                        action="{{ route('person.search.list') }}">
+                                        @csrf
+                                        <div class="input-group input-group-outline mb-3">
+                                            <input type="text" class="form-control"
+                                                placeholder="Cari orang berdasarkan nama ..." value="{{ @$search }}"
+                                                name="search">
+                                            <button class="btn btn-outline-primary m-0" type="submit" id="button-addon2">
+                                                <div
+                                                    class="text-center me-2 d-flex align-items-center justify-content-center">
+                                                    <i class="material-icons opacity-10">search</i>
+                                                </div>
+                                            </button>
                                         </div>
-                                    </button>
+                                    </form>
                                 </div>
-                            </form>
-                        </div>
 
+                            </div>
+                        </div>
                         <div class="table-responsive p-0">
                             <table class="table align-items-center mb-0">
                                 <thead>
@@ -120,7 +129,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <nav class="m-4 d-flex justify-content-between">
+                        <nav class="m-4 d-flex justify-content-between align-items-center">
                             <div>
                                 <span class="text-secondary text-sm">Menampilkan
                                     {{ $people->perPage() * $people->currentPage() - ($people->perPage() - 1) }} -
@@ -128,7 +137,7 @@
                                     dari
                                     {{ $people->total() }}</span>
                             </div>
-                            <ul class="pagination justify-content-end">
+                            <ul class="pagination justify-content-end m-0">
                                 <li class="page-item pe-2 {{ $people->currentPage() - 1 == 0 ? 'disabled' : '' }}">
                                     <a class="page-link" href="{{ $people->url($people->currentPage() - 1) }}"
                                         tabindex="-1">

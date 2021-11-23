@@ -23,7 +23,7 @@ Auth::routes([
     'verify' => false, // Email Verification Routes...
 ]);
 
-Route::prefix('home')->name('home.')->middleware('auth', 'access.right:superadmin,admin,family_head')->group(function () {
+Route::prefix('home')->name('home.')->middleware('auth')->group(function () {
     Route::get('/', function () {
         return redirect(route('home.dashboard'));
     })->name('index');
@@ -39,17 +39,18 @@ Route::prefix('user')->name('user.')->middleware('auth', 'access.right:superadmi
     Route::put('/update-password/{id}', 'UserController@updatePassword')->name('update.password');
 });
 
-Route::prefix('person')->name('person.')->middleware('auth', 'access.right:superadmin,admin,family_head')->group(function () {
+Route::prefix('person')->name('person.')->middleware('auth')->group(function () {
     Route::get('/', 'PersonController@index')->name('index');
     Route::get('/search', 'PersonController@search')->name('search');
     Route::get('/show/{id}', 'PersonController@show')->name('show');
-    Route::get('/create', 'PersonController@create')->name('create');
-    Route::post('/store', 'PersonController@store')->name('store');
+    Route::get('/create', 'PersonController@create')->name('create')->middleware('access.right:superadmin,admin');
+    Route::post('/store', 'PersonController@store')->name('store')->middleware('access.right:superadmin,admin');
     Route::get('/edit/{id}', 'PersonController@edit')->name('edit');
     Route::put('/update/{id}', 'PersonController@update')->name('update');
     Route::post('/search-list', 'PersonController@searchList')->name('search.list');
     Route::get('/family-tree/{id}', 'PersonController@familyTree')->name('family.tree');
     Route::get('/family-tree-json/{id}', 'PersonController@familyTreeJson')->name('family.tree.json');
+    Route::delete('/destroy', 'PersonController@destroy')->name('destroy')->middleware('access.right:superadmin');
 });
 
 Route::prefix('partner')->name('partner.')->middleware('auth', 'access.right:superadmin,admin,family_head')->group(function () {
@@ -59,9 +60,15 @@ Route::prefix('partner')->name('partner.')->middleware('auth', 'access.right:sup
     Route::put('/update/{id}', 'PartnerController@update')->name('update');
 });
 
-Route::prefix('zone')->name('zone.')->middleware('auth', 'access.right:superadmin,admin,family_head')->group(function () {
+Route::prefix('zone')->name('zone.')->middleware('auth')->group(function () {
     Route::get('/provinces', 'ZoneController@provinces')->name('province');
     Route::get('/cities', 'ZoneController@cities')->name('city');
     Route::get('/districts', 'ZoneController@districts')->name('district');
     Route::get('/villages', 'ZoneController@villages')->name('village');
+});
+
+Route::prefix('account')->name('account.')->middleware('auth')->group(function () {
+    Route::get('/profile', 'AccountController@profile')->name('profile');
+    Route::put('/profile-update', 'AccountController@profileUpdate')->name('profile.update');
+    Route::put('/profile-update-password', 'AccountController@profileUpdatePassword')->name('profile.update.password');
 });
