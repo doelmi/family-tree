@@ -61,7 +61,7 @@
                                             </td>
                                             <td class="align-middle text-center text-sm">
                                                 @if ($user->detail->person)
-                                                    <a href="{{ route('person.show', ['id' => $user->id]) }}">
+                                                    <a href="{{ route('person.show', ['id' => $user->detail->person->id]) }}">
                                                         <span class="badge badge-sm bg-gradient-secondary">
                                                             {{ $user->detail->person->name }}
                                                         </span>

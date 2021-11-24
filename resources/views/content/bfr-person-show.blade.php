@@ -216,11 +216,13 @@
                                     <h6 class="text-white text-capitalize ps-3">Keluarga
                                         ({{ $spouse->name }} & Anak)</h6>
                                 </div>
+                                @if (in_array(Auth::user()->detail->role->code, ['superadmin', 'admin']))
                                 <div class="col-6 d-flex align-items-center justify-content-end">
                                     <a href="{{ route('partner.create') . '?' . $spouse->me_key . '=' . $person->id }}"
                                         class="btn btn-outline-white btn-sm mb-1 me-3">Tambahkan Relasi
                                         ke {{ $spouse->name }}</a>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>

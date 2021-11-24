@@ -60,7 +60,8 @@
             </a>
         </div>
         <hr class="horizontal light mt-0 mb-2">
-        <div class="collapse navbar-collapse  w-auto  max-height-vh-100" id="sidenav-collapse-main">
+        <div class="collapse navbar-collapse w-auto max-height-vh-100" id="sidenav-collapse-main"
+            style="height: calc(100vh - 150px)!important;">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link text-white @if (Route::is('home*')) active bg-gradient-primary @endif" href="{{ route('home.dashboard') }}">

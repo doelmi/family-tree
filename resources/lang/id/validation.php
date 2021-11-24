@@ -173,7 +173,7 @@ return [
         'husband_id' => 'Suami',
         'wife_id' => 'Istri',
         'marriage_date' => 'Tanggal Pernikahan',
-        'delete_person_id' => 'Data Orang akan dihapus',
+        'delete_person_id' => 'Data Orang',
         'password' => 'Kata Sandi',
         'current_password' => 'Kata Sandi Sekarang',
         'new_password' => 'Kata Sandi Baru',

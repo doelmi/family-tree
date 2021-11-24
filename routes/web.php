@@ -54,10 +54,11 @@ Route::prefix('person')->name('person.')->middleware('auth')->group(function () 
 });
 
 Route::prefix('partner')->name('partner.')->middleware('auth', 'access.right:superadmin,admin,family_head')->group(function () {
-    Route::get('/create', 'PartnerController@create')->name('create');
-    Route::post('/store', 'PartnerController@store')->name('store');
+    Route::get('/create', 'PartnerController@create')->name('create')->middleware('access.right:superadmin,admin');
+    Route::post('/store', 'PartnerController@store')->name('store')->middleware('access.right:superadmin,admin');
     Route::get('/edit/{id}', 'PartnerController@edit')->name('edit');
     Route::put('/update/{id}', 'PartnerController@update')->name('update');
+    Route::delete('/destroy/{id}', 'PartnerController@destroy')->name('destroy')->middleware('access.right:superadmin');
 });
 
 Route::prefix('zone')->name('zone.')->middleware('auth')->group(function () {

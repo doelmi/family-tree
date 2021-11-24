@@ -86,4 +86,17 @@ class PartnerController extends Controller
             return back()->with(['error' => $th->getMessage()])->withInput();
         }
     }
+
+    public function destroy(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            Partner::destroy($id);
+            DB::commit();
+            return ($request->referrer ? redirect($request->referrer) : redirect()->route('person.show', ['id' => $request->husband_id]))->with('message', 'Relasi Pasangan berhasil dihapus');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return back()->with(['error' => $th->getMessage()])->withInput();
+        }
+    }
 }

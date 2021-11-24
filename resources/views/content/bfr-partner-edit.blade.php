@@ -11,10 +11,13 @@
                                 <div class="col-6 d-flex align-items-center">
                                     <h6 class="text-white text-capitalize ps-3">Edit Relasi Pasangan</h6>
                                 </div>
-                                <div class="col-6 text-end">
-                                    <a href="{{ route('person.index') }}"
-                                        class="btn btn-outline-white btn-sm mb-1 me-3">Hapus Relasi Pasangan</a>
-                                </div>
+                                @if (in_array(Auth::user()->detail->role->code, ['superadmin']))
+                                    <div class="col-6 text-end">
+                                        <a href="javascript:void(0)" class="btn btn-danger btn-block mb-1 me-3"
+                                            data-bs-toggle="modal" data-bs-target="#deletePersonModal">Hapus Relasi
+                                            Pasangan</a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -39,7 +42,8 @@
                             <div class="input-group input-group-static mb-3">
                                 <label class="ms-0">Tanggal Menikah</label>
                                 <input type="date" name="marriage_date" class="form-control" autocomplete="off"
-                                    autofill="off" value="{{ $partner->marriage_date ? $partner->marriage_date->format('Y-m-d') : '' }}">
+                                    autofill="off"
+                                    value="{{ $partner->marriage_date ? $partner->marriage_date->format('Y-m-d') : '' }}">
                             </div>
                             <input type="hidden" name="referrer" value="{{ request()->server('HTTP_REFERER') }}">
                             <div class="text-center">
@@ -52,6 +56,36 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    @if (in_array(Auth::user()->detail->role->code, ['superadmin']))
+        <div class="modal fade" id="deletePersonModal" tabindex="-1" role="dialog"
+            aria-labelledby="deletePersonModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <form action="{{ route('partner.destroy', ['id' => $partner->id]) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <input type="hidden" name="referrer" value="{{ request()->server('HTTP_REFERER') }}">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title font-weight-normal" id="deletePersonModalLabel">Hapus data relasi pasangan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Apakah Anda yakin untuk menghapus data relasi pasangan ini: {{ $partner->husband->name }} & {{ $partner->wife->name }} ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn bg-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn bg-gradient-danger">Hapus</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
+
     <script>
         $(document).ready(function() {
             $('#husbandSearch').select2({
